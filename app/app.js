@@ -135,39 +135,45 @@ const reelControl = document.querySelector('#reel-control');
 const reelProgress = document.querySelector('#reel-progress');
 const reelTime = document.querySelector('#reel-time');
 const reelSlides = [...document.querySelectorAll('.reel-slide')];
+const reelFrame = document.querySelector('#hero-reel');
+const secondsPerSlide = 3;
+const reelDuration = reelSlides.length * secondsPerSlide;
 let reelTimer;
 let reelElapsed = 0;
-const reelDuration = 9;
+
+function formatTime(seconds) {
+  return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+}
 
 function updateReel() {
-  const activeSlide = Math.min(Math.floor(reelElapsed / 3), reelSlides.length - 1);
+  const activeSlide = Math.min(Math.floor(reelElapsed / secondsPerSlide), reelSlides.length - 1);
   reelSlides.forEach((slide, index) => slide.classList.toggle('is-visible', index === activeSlide));
+  reelProgress.style.transition = reelElapsed === 0 ? 'none' : '';
   reelProgress.style.width = `${reelElapsed / reelDuration * 100}%`;
-  reelTime.textContent = `00:${String(reelElapsed).padStart(2, '0')} / 00:09`;
+  reelTime.textContent = `${formatTime(reelElapsed)} / ${formatTime(reelDuration)}`;
 }
 
 function pauseReel() {
   clearInterval(reelTimer);
   reelTimer = undefined;
+  reelFrame.classList.remove('is-playing');
   reelControl.querySelector('span').textContent = '▶';
-  reelControl.setAttribute('aria-label', reelElapsed === reelDuration ? 'Phát lại bản xem trước hình ảnh' : 'Phát bản xem trước hình ảnh');
+  reelControl.setAttribute('aria-label', 'Phát bản xem trước hình ảnh');
 }
 
-reelControl.addEventListener('click', () => {
-  if (reelTimer) {
-    pauseReel();
-    return;
-  }
-  if (reelElapsed === reelDuration) reelElapsed = 0;
+function playReel() {
   updateReel();
+  reelFrame.classList.add('is-playing');
   reelControl.querySelector('span').textContent = 'Ⅱ';
   reelControl.setAttribute('aria-label', 'Tạm dừng bản xem trước hình ảnh');
   reelTimer = setInterval(() => {
-    reelElapsed++;
+    reelElapsed = (reelElapsed + 1) % reelDuration;
     updateReel();
-    if (reelElapsed >= reelDuration) pauseReel();
   }, 1000);
-});
+}
+
+reelControl.addEventListener('click', () => (reelTimer ? pauseReel() : playReel()));
+playReel();
 
 const contactDialog = document.querySelector('#contact-dialog');
 const copyStatus = document.querySelector('#copy-status');

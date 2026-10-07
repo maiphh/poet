@@ -114,7 +114,13 @@ function renderPackage(index) {
   contactMessage.value = `Xin chào POET, doanh nghiệp của tôi quan tâm đến gói Little Joy ${selected.name} (${selected.price} triệu đồng). Mong được trao đổi thêm về quyền lợi và cách đồng hành cùng chương trình Big Joy. Xin cảm ơn!`;
 }
 
-packageButtons.forEach(button => button.addEventListener('click', () => renderPackage(Number(button.dataset.package))));
+const packageDetail = document.querySelector('#package-detail');
+packageButtons.forEach(button => button.addEventListener('click', () => {
+  renderPackage(Number(button.dataset.package));
+  packageDetail.classList.remove('is-switching');
+  void packageDetail.offsetWidth;
+  packageDetail.classList.add('is-switching');
+}));
 renderPackage(selectedPackage);
 
 const menuToggle = document.querySelector('.menu-toggle');
@@ -195,3 +201,38 @@ document.querySelector('#copy-message').addEventListener('click', async () => {
     copyStatus.textContent = 'Đã chọn lời nhắn. Nhấn Ctrl+C (hoặc Sao chép trên điện thoại).';
   }
 });
+
+const siteHeader = document.querySelector('.site-header');
+const onScroll = () => siteHeader.classList.toggle('is-scrolled', window.scrollY > 40);
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+const revealGroups = [
+  '.intro .section-kicker, .intro h2, .intro-right',
+  '.section-heading > div, .section-heading > p, .packages-top > div, .packages-top > p',
+  '.journey-card',
+  '.ugc-copy > *, .social-back, .social-front, .ugc-sticker',
+  '.perk-card',
+  '.package-option',
+  '.package-detail, .package-note',
+  '.closing-inner > *:not(.closing-deco)',
+  '.footer-main > div'
+];
+
+if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-revealed');
+      revealObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  revealGroups.forEach(selector => {
+    document.querySelectorAll(selector).forEach((element, index) => {
+      element.classList.add('reveal');
+      element.style.setProperty('--reveal-delay', `${Math.min(index, 9) * 70}ms`);
+      revealObserver.observe(element);
+    });
+  });
+}

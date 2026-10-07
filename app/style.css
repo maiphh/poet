@@ -453,6 +453,46 @@ strong { font-weight: 800; }
 .dialog-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
 .copy-status { min-height: 1.5em; margin: 12px 0 0; color: var(--green) !important; font-weight: 700; }
 
+.site-header { position: sticky; top: 0; transition: background .3s, box-shadow .3s; }
+.site-header.is-scrolled { background: rgba(244, 230, 207, .92); backdrop-filter: blur(8px); box-shadow: 0 6px 20px rgba(74, 51, 36, .1); }
+.header-inner { transition: height .3s; }
+.site-header.is-scrolled .header-inner { height: 70px; }
+section[id] { scroll-margin-top: 80px; }
+
+@keyframes rise { from { opacity: 0; translate: 0 28px; } to { opacity: 1; translate: 0 0; } }
+@keyframes pop { 0% { opacity: 0; scale: .85; } 70% { scale: 1.03; } 100% { opacity: 1; scale: 1; } }
+@keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+@keyframes fadeSwap { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
+
+.hero-copy > * { animation: rise .8s cubic-bezier(.2, .7, .2, 1) both; }
+.hero-copy > :nth-child(1) { animation-delay: .05s; }
+.hero-copy > :nth-child(2) { animation-delay: .15s; }
+.hero-copy > :nth-child(3) { animation-delay: .28s; }
+.hero-copy > :nth-child(4) { animation-delay: .38s; }
+.hero-copy > :nth-child(5) { animation-delay: .48s; }
+.hero-copy > :nth-child(6) { animation-delay: .58s; }
+.hero-art { animation: pop 1s cubic-bezier(.2, .7, .2, 1) .25s both; }
+.reel-frame { animation: float 6s ease-in-out 1.4s infinite; }
+.joy-seal { animation: float 5s ease-in-out .6s infinite; }
+.poster-note { transition: transform .3s; }
+.poster-note:hover { transform: rotate(0) scale(1.06); }
+.ticker:hover .ticker-inner { animation-play-state: paused; }
+
+.reveal {
+  opacity: 0;
+  translate: 0 32px;
+  transition: opacity .7s ease var(--reveal-delay, 0ms), translate .8s cubic-bezier(.2, .7, .2, 1) var(--reveal-delay, 0ms), transform .25s, box-shadow .2s, background .15s;
+}
+.reveal.is-revealed { opacity: 1; translate: 0 0; }
+
+.package-detail.is-switching .detail-head,
+.package-detail.is-switching .detail-highlights,
+.package-detail.is-switching .detail-phases { animation: fadeSwap .45s cubic-bezier(.2, .7, .2, 1) both; }
+.package-detail.is-switching .detail-highlights { animation-delay: .06s; }
+.package-detail.is-switching .detail-phases { animation-delay: .12s; }
+.highlight, .phase li { transition: transform .2s; }
+.highlight:hover { transform: translateY(-3px) rotate(-1deg); }
+
 @media (max-width: 980px) {
   .desktop-nav, .header-cta { display: none; }
   .menu-toggle { display: block; }

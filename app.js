@@ -115,12 +115,82 @@ function renderPackage(index) {
 }
 
 const packageDetail = document.querySelector('#package-detail');
+const packagePicker = document.querySelector('.package-picker');
+const mobileQuery = window.matchMedia('(max-width: 620px)');
+
+function centerPackageButton(button, behavior = 'smooth') {
+  if (packagePicker.scrollWidth <= packagePicker.clientWidth) return;
+  packagePicker.scrollTo({ left: button.offsetLeft - (packagePicker.clientWidth - button.offsetWidth) / 2, behavior });
+}
+
 packageButtons.forEach(button => button.addEventListener('click', () => {
   renderPackage(Number(button.dataset.package));
   packageDetail.classList.remove('is-switching');
   void packageDetail.offsetWidth;
   packageDetail.classList.add('is-switching');
+  updatePhaseOverflow();
+  if (!mobileQuery.matches) return;
+  centerPackageButton(button);
+  const stickyBottom = parseFloat(getComputedStyle(packagePicker).top) + packagePicker.offsetHeight;
+  const detailTop = packageDetail.getBoundingClientRect().top;
+  if (detailTop < stickyBottom || detailTop > window.innerHeight * .6) {
+    window.scrollTo({ top: window.scrollY + detailTop - stickyBottom - 12, behavior: 'smooth' });
+  }
 }));
+
+const phaseDots = [...document.querySelectorAll('.phase-dots i')];
+const phaseLabel = document.querySelector('.phase-label');
+const phaseArrows = [...document.querySelectorAll('.phase-arrow')];
+const phaseCount = phaseDots.length;
+let activePhase = 0;
+
+function setActivePhase(index) {
+  activePhase = index;
+  phaseDots.forEach((dot, position) => dot.classList.toggle('is-active', position === index));
+  phaseLabel.textContent = `Chặng ${index + 1}/${phaseCount} · ${index === phaseCount - 1 ? 'vuốt để quay lại' : 'vuốt để xem tiếp'}`;
+  phaseArrows[0].disabled = index === 0;
+  phaseArrows[1].disabled = index === phaseCount - 1;
+}
+
+function updatePhaseOverflow() {
+  [...detailPhases.children].forEach(phase => {
+    const list = phase.querySelector('ul');
+    phase.classList.toggle('has-more', list.scrollHeight - list.scrollTop - list.clientHeight > 4);
+  });
+}
+
+detailPhases.addEventListener('scroll', event => {
+  if (event.target.tagName === 'UL') updatePhaseOverflow();
+}, { capture: true, passive: true });
+window.addEventListener('resize', updatePhaseOverflow);
+
+function goToPhase(index, behavior = 'smooth') {
+  const phase = detailPhases.children[index];
+  if (!phase) return;
+  detailPhases.scrollTo({ left: phase.offsetLeft, behavior });
+  setActivePhase(index);
+}
+
+phaseArrows.forEach(arrow => arrow.addEventListener('click', () => {
+  goToPhase(Math.max(0, Math.min(phaseCount - 1, activePhase + Number(arrow.dataset.dir))));
+}));
+
+detailPhases.addEventListener('scroll', () => {
+  const phases = [...detailPhases.children];
+  const left = detailPhases.scrollLeft;
+  let closest = 0;
+  phases.forEach((phase, index) => {
+    if (Math.abs(phase.offsetLeft - left) < Math.abs(phases[closest].offsetLeft - left)) closest = index;
+  });
+  if (left > 0 && left + detailPhases.clientWidth >= detailPhases.scrollWidth - 4) closest = phases.length - 1;
+  if (closest !== activePhase) setActivePhase(closest);
+}, { passive: true });
+
+setActivePhase(0);
+updatePhaseOverflow();
+document.fonts.ready.then(updatePhaseOverflow);
+centerPackageButton(packageButtons[selectedPackage], 'auto');
+mobileQuery.addEventListener('change', () => centerPackageButton(packageButtons[selectedPackage], 'auto'));
 renderPackage(selectedPackage);
 
 const menuToggle = document.querySelector('.menu-toggle');

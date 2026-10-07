@@ -1,3 +1,25 @@
+// GitHub Pages cannot redirect. On a hosted site, drop "index.html" from the
+// address bar and from links: /poet/index.html shows as /poet/. Skip file://
+// so a local double-click still opens the page instead of the folder listing.
+function hideIndexHtml() {
+  if (location.protocol === 'file:') return;
+
+  if (location.pathname.endsWith('/index.html')) {
+    const clean = location.pathname.replace(/index\.html$/, '') + location.search + location.hash;
+    history.replaceState(null, '', clean);
+  }
+
+  document.querySelectorAll('a[href]').forEach(anchor => {
+    const href = anchor.getAttribute('href');
+    if (!href || /^(?:[a-z]+:|#)/i.test(href) || !/index\.html(?:#|$)/.test(href)) return;
+    let next = href.replace(/index\.html(?=#|$)/, '');
+    if (next === '' || next.startsWith('#')) next = `./${next}`;
+    anchor.setAttribute('href', next);
+  });
+}
+
+hideIndexHtml();
+
 const packages = [
   { name: 'BABY STEP', price: 1, description: 'Bắt đầu hành trình sẻ chia bằng một lời chào thật dễ thương.' },
   { name: 'SPARK', price: 3, description: 'Châm tia lửa đầu tiên và gặp gỡ cộng đồng tại Pop-up.' },

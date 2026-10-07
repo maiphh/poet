@@ -18,7 +18,7 @@
   --font: 'Nunito', 'Segoe UI', Arial, sans-serif;
   --display: 'Baloo 2', 'Nunito', sans-serif;
   --hand: 'Itim', 'Baloo 2', cursive;
-  --logo: url('../assets/logo/1555047679990943.jpg');
+  --logo: url('assets/logo/1555047679990943.jpg');
 }
 
 * { box-sizing: border-box; }
@@ -326,8 +326,8 @@ strong { font-weight: 800; }
 .social-back { top: 4%; left: 6%; transform: rotate(-7deg); }
 .social-front { bottom: 4%; right: 6%; transform: rotate(5deg); z-index: 2; }
 .social-image { aspect-ratio: 9 / 12; border-radius: 4px; margin-bottom: 12px; background: center / cover no-repeat var(--paper-deep); }
-.social-image-one { background-image: url('../assets/photos/3348057958846892.jpg'); }
-.social-image-two { background-image: url('../assets/photos/3348058292180192.jpg'); }
+.social-image-one { background-image: url('assets/photos/3348057958846892.jpg'); }
+.social-image-two { background-image: url('assets/photos/3348058292180192.jpg'); }
 .social-index { display: block; font-family: var(--hand); font-size: 13px; color: var(--ink-soft); }
 .social-card strong { display: block; font-family: var(--display); font-size: 20px; line-height: 1.2; }
 .social-card small { color: var(--coral); font-weight: 700; }

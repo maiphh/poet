@@ -202,6 +202,31 @@ document.querySelector('#copy-message').addEventListener('click', async () => {
   }
 });
 
+const tickerInner = document.querySelector('.ticker-inner');
+const tickerGroup = tickerInner.querySelector('.ticker-group');
+const tickerPhrase = tickerGroup.innerHTML;
+
+function buildTicker() {
+  tickerInner.querySelectorAll('.ticker-group + .ticker-group').forEach(group => group.remove());
+  tickerGroup.innerHTML = tickerPhrase;
+  const minWidth = tickerInner.parentElement.offsetWidth + 200;
+  if (!tickerGroup.offsetWidth) return;
+  while (tickerGroup.offsetWidth < minWidth) tickerGroup.insertAdjacentHTML('beforeend', ` ${tickerPhrase}`);
+  tickerInner.append(tickerGroup.cloneNode(true));
+  tickerInner.style.setProperty('--ticker-duration', `${tickerGroup.offsetWidth / 60}s`);
+}
+
+let tickerWidth = 0;
+function refreshTicker() {
+  const width = tickerInner.parentElement.offsetWidth;
+  if (width === tickerWidth) return;
+  tickerWidth = width;
+  buildTicker();
+}
+document.fonts.ready.then(buildTicker);
+refreshTicker();
+window.addEventListener('resize', refreshTicker);
+
 const siteHeader = document.querySelector('.site-header');
 const onScroll = () => siteHeader.classList.toggle('is-scrolled', window.scrollY > 40);
 window.addEventListener('scroll', onScroll, { passive: true });

@@ -22,18 +22,31 @@
 }
 
 * { box-sizing: border-box; }
-:root { color-scheme: only light; }
-html { scroll-behavior: smooth; overflow-x: hidden; overflow-x: clip; background-color: #f4e6cf; -webkit-text-size-adjust: 100%; }
+:root { color-scheme: light; color-scheme: light only; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  overflow-x: clip;
+  color-scheme: light only;
+  background-color: #f4e6cf;
+  background-image: linear-gradient(#f4e6cf, #f4e6cf);
+  isolation: isolate;
+  -webkit-text-size-adjust: 100%;
+}
 html, body { max-width: 100%; }
+button, input, textarea, select, dialog { color-scheme: light only; }
 main, footer { overflow-x: clip; }
 body {
   margin: 0;
   position: relative;
+  color-scheme: light only;
+  isolation: isolate;
   background-color: var(--paper);
   background-image:
     radial-gradient(circle at 20% 30%, rgba(255, 255, 255, .35) 0 1px, transparent 1.5px),
-    radial-gradient(circle at 70% 80%, rgba(122, 91, 69, .07) 0 1px, transparent 1.5px);
-  background-size: 7px 7px, 11px 11px;
+    radial-gradient(circle at 70% 80%, rgba(122, 91, 69, .07) 0 1px, transparent 1.5px),
+    linear-gradient(#f4e6cf, #f4e6cf);
+  background-size: 7px 7px, 11px 11px, auto;
   color: var(--ink);
   font-family: var(--font);
   font-size: 16px;
@@ -459,7 +472,7 @@ strong { font-weight: 800; }
 .copy-status { min-height: 1.5em; margin: 12px 0 0; color: var(--green) !important; font-weight: 700; }
 
 .site-header { position: sticky; top: 0; transition: background .3s, box-shadow .3s; }
-.site-header.is-scrolled { background: rgba(244, 230, 207, .92); backdrop-filter: blur(8px); box-shadow: 0 6px 20px rgba(74, 51, 36, .1); }
+.site-header.is-scrolled { background: var(--paper); box-shadow: 0 6px 20px rgba(74, 51, 36, .1); }
 .header-inner { transition: height .3s; }
 .site-header.is-scrolled .header-inner { height: 70px; }
 section[id] { scroll-margin-top: 80px; }
@@ -539,8 +552,7 @@ section[id] { scroll-margin-top: 80px; }
     scroll-snap-type: x proximity;
     scroll-padding-inline: 20px;
     scrollbar-width: none;
-    background: rgba(236, 217, 187, .94);
-    backdrop-filter: blur(8px);
+    background: var(--paper-deep);
     border-bottom: 2px dashed var(--line);
     -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 28px), transparent);
     mask-image: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 28px), transparent);
@@ -627,4 +639,34 @@ section[id] { scroll-margin-top: 80px; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* Phone dark mode must keep the same paper palette. Repeating it here
+   also tells Android WebView the page already chose its colors. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light only;
+    --paper: #f4e6cf;
+    --paper-deep: #ecd9bb;
+    --card: #fffaf1;
+    --ink: #4a3324;
+    --ink-soft: #7a5b45;
+    --outline: #2f2219;
+    --coral: #ff8a76;
+    --blue: #6aa5c4;
+    --sky: #9fd0f2;
+    --green: #3a9e74;
+    --leaf: #8cc63f;
+    --yellow: #f6c43f;
+    --pink: #f3a9c4;
+    --brick: #b5482c;
+    --line: #e2cfb1;
+  }
+  html, body {
+    color-scheme: light only;
+    background-color: #f4e6cf;
+    color: #4a3324;
+  }
+  img, video, svg, canvas { filter: none; }
+  button, input, textarea, select, dialog { color-scheme: light only; }
 }

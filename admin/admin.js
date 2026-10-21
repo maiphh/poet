@@ -1,5 +1,5 @@
 (() => {
-  const API_BASE = 'https://poet-donations.poet-ung-ho.workers.dev';
+  const API_BASE = window.POET_API_BASE;
   const TOKEN_KEY = 'poetAdminToken';
   const USER_KEY = 'poetAdminUser';
 

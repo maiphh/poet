@@ -1,5 +1,5 @@
 (() => {
-  const API_BASE = 'https://poet-donations.poet-ung-ho.workers.dev';
+  const API_BASE = window.POET_API_BASE;
   const ANON_NAME = 'Một nhà hảo tâm';
   const CONFIG = window.POET_DONATE_CONFIG || { items: [], campaign: null };
   const ITEMS = (CONFIG.items || []).slice().sort((x, y) => x.price - y.price);

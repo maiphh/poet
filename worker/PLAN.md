@@ -172,7 +172,7 @@ CORS on `/api/*` for browser routes: allow origin `ALLOWED_ORIGIN` only, methods
 - Otherwise `displayName` is 1–40 characters after trim.
 - `message` is 1–160 characters after trim.
 - Reject control characters, `<`, `>`, and any string matching `https?://` or `www.`.
-- Rate limit: HMAC-SHA256 of `CF-Connecting-IP` with the checksum key, store the hex prefix (32 chars) in `create_attempts`. Refuse when that hash has 5 rows in the last hour (HTTP 429). Delete that hash’s rows older than 2 hours on each attempt. Missing IP: HTTP 400.
+- Rate limit: HMAC-SHA256 of `CF-Connecting-IP` with the checksum key, store the hex prefix (32 chars) in `create_attempts`. Refuse when that hash has 100 rows in the last hour (HTTP 429). Delete that hash’s rows older than 2 hours on each attempt. Missing IP: HTTP 400.
 
 `GET /api/donations` returns at most 30 published rows, newest `paid_at` first: `{ donations: [{ displayName, message, amount, paidAt }] }`. `Cache-Control: public, max-age=30`. No payment link ids, no order codes.
 

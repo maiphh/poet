@@ -55,6 +55,10 @@ ALTER TABLE donations ADD COLUMN virtual_account_number TEXT;
 -- Message visibility flag (independent of payment status).
 ALTER TABLE donations ADD COLUMN hidden INTEGER NOT NULL DEFAULT 0;
 
+-- Concept D: one gift type per donation (see migrations/0004_gift.sql).
+ALTER TABLE donations ADD COLUMN gift_id TEXT;
+ALTER TABLE donations ADD COLUMN gift_qty INTEGER;
+
 -- One-time, safe to re-run. Legacy statuses fold into pending/success.
 UPDATE donations SET hidden = 1, status = 'success' WHERE status = 'hidden';
 UPDATE donations SET status = 'success' WHERE status IN ('paid', 'published');
